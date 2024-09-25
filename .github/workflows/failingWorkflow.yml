@@ -25,20 +25,19 @@ jobs:
       - name: Add execute permission for ESLint
         run: chmod +x ./node_modules/.bin/eslint
 
-      # Add this step to list installed ESLint and confirm if it exists
       - name: Verify ESLint installation
         run: ls -la node_modules/.bin
 
-      # Run ESLint using npx
+      # Run ESLint and capture logs
       - name: Run ESLint
-        run: npx eslint . 2>&1 | tee build.log || exit 1
+        run: npx eslint . --max-warnings 0 2>&1 | tee build.log  # Fail on warnings and errors
 
       - name: Query Greptile On Failure
         if: failure()
         run: |
-          # Check if the log file exists before reading
+          if [[ -f build.log ]]; then
             LOG_CONTENT=$(< build.log)
-            curl -X POST https://your-webhook-url.com/endpoin1t \
+            curl -X POST https://your-webhook-url.com/endpoint \
               -H "Content-Type: application/json" \
               -d '{
                 "log": "'"${LOG_CONTENT//\'/\'\\\'\'}"'",
@@ -47,3 +46,6 @@ jobs:
                 "greptileKey": "'"${{ secrets.GREPTILE_KEY }}"'",
                 "githubToken": "'"${{ secrets.GH_TOKEN }}"'"
               }'
+          else
+            echo "Log file not found."
+          fi
