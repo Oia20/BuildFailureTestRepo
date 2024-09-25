@@ -40,7 +40,7 @@ jobs:
           curl -X POST https://your-webhook-url.com/endpoint \
           -H "Content-Type: application/json" \
           -d '{
-            "log": "'"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"'",
+            "logUrl": "'"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"'",
             "status": "failure",
             "repo": "'"${{ github.repository }}"'",
             "greptileKey": "'"${{ secrets.GREPTILE_KEY }}"'",
