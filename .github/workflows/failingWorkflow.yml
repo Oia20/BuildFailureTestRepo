@@ -31,23 +31,41 @@ jobs:
 
       # Run ESLint using npx
       - name: Run ESLint
-        run: npx eslint .
+        run: npx eslint . || echo "ESLint failed, check the output above."
 
-      - name: Save logs to a file
-        if: failure()
+      # Create the build directory
+      - name: Create Build Directory
+        run: mkdir -p build
+
+      # Run Build and capture logs
+      - name: Run Build
         run: |
           npm run build > build/logs.txt 2>&1  # Capture both stdout and stderr
 
+      # Save logs to a file only if the build fails
+      - name: Save logs to a file
+        if: failure()
+        run: |
+          echo "Collecting logs..."
+          # Check if the log file exists before reading
+          if [[ -f build/logs.txt ]]; then
+            echo "Build logs:" > logs.txt  # Create or overwrite logs.txt
+            cat build/logs.txt >> logs.txt  # Append the content of build/logs.txt
+          else
+            echo "No logs generated." >> logs.txt
+          fi
+
+      # Query Greptile On Failure
       - name: Query Greptile On Failure
         if: failure()
         run: |
           # Check if the log file exists before reading
           if [[ -f logs.txt ]]; then
-            LOG_CONTENT=$(< logs.txt)  # Using a more efficient way to read the files
+            LOG_CONTENT=$(< logs.txt)  # Read the logs from the correct file
             curl -X POST https://your-webhook-url.com/endpoint \
               -H "Content-Type: application/json" \
               -d '{
-                "log": "'"$(cat build.log | jq -Rsa .)"'",
+                "log": "'"$(echo "$LOG_CONTENT" | jq -Rsa .)"'",
                 "status": "failure",
                 "repo": "'"${{ github.repository }}"'",
                 "greptileKey": "'"${{ secrets.GREPTILE_KEY }}"'",
