@@ -36,9 +36,7 @@ jobs:
       - name: Save logs to a file
         if: failure()
         run: |
-          echo "Collecting logs..."
-          # Redirecting stdout and stderr to a log file
-          { echo "Build logs:"; cat build/logs.txt; } > logs.txt || echo "No logs generated."
+          npm run build > build/logs.txt 2>&1  # Capture both stdout and stderr
 
       - name: Query Greptile On Failure
         if: failure()
