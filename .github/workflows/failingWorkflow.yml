@@ -22,9 +22,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # Add this step to list installed ESLint and confirm if it exists
+      - name: Verify ESLint installation
+        run: ls -la node_modules/.bin
+
+      # Run ESLint using npx
       - name: Run ESLint
         run: npx eslint .
-
-      - name: Run the application
-        run: node indexAlwaysFail.js
-

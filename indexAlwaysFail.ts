@@ -1,3 +1,4 @@
 // index.js
 let unusedVar;  // Introduces an ESLint 'no-unused-vars' error
-console.log("Hello World");
+let unusedVari;  // Introduces an ESLint 'no-unused-vars' error
+console.log(unusedVari);
