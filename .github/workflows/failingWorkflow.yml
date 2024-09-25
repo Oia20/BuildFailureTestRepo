@@ -36,6 +36,7 @@ jobs:
       - name: Query Greptile On Failure
         if: failure()
         run: |
+          echo "Querying Greptile for failure ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           curl -X POST https://your-webhook-url.com/endpoint \
           -H "Content-Type: application/json" \
           -d '{
