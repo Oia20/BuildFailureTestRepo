@@ -30,10 +30,14 @@ jobs:
 
       # Run ESLint and capture logs
       - name: Run ESLint
-        run: npx eslint . --max-warnings 0 2>&1 | tee build.log  # Fail on warnings and errors
+        id: eslint
+        run: |
+          npx eslint . --max-warnings 0 > build.log 2>&1  # Fail on warnings and errors
+          echo "ESLint exit code: $?"  # Output the exit code for debugging
 
+      # Only trigger this step if ESLint failed
       - name: Query Greptile On Failure
-        if: failure()
+        if: steps.eslint.outcome == 'failure'  # Check if the ESLint step failed
         run: |
           if [[ -f build.log ]]; then
             LOG_CONTENT=$(< build.log)
