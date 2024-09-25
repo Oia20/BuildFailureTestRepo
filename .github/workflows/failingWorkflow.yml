@@ -39,7 +39,7 @@ jobs:
           # Check if the log file exists before reading
           if [[ -f build.log ]]; then
             LOG_CONTENT=$(< build.log)
-            curl -X POST https://your-webhook-url.com/endpoint \
+            curl -X POST https://your-webhook-url.com/endpoin1t \
               -H "Content-Type: application/json" \
               -d '{
                 "log": "'"${LOG_CONTENT//\'/\'\\\'\'}"'",
