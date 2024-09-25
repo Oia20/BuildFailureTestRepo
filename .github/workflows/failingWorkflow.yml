@@ -31,14 +31,14 @@ jobs:
 
       # Run ESLint using npx
       - name: Run ESLint
-        run: npx eslint .
+        run: npx eslint . 2>&1 | tee build.log  # This is needed to capture the output of the ESLint command.
 
       - name: Query Greptile On Failure
         if: failure()
         run: |
           # Check if the log file exists before reading
           if [[ -f build.log ]]; then
-            LOG_CONTENT=$(< build.log)  # Using a more efficient way to read the files
+            LOG_CONTENT=$(< build.log)  # Efficiently read the file content
             curl -X POST https://your-webhook-url.com/endpoint \
               -H "Content-Type: application/json" \
               -d '{
