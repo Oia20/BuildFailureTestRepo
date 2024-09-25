@@ -31,7 +31,7 @@ jobs:
 
       # Run ESLint using npx
       - name: Run ESLint
-        run: npx eslint . 2>&1 | tee build.log  # This is needed to capture the output of the ESLint command.
+        run: npx eslint . 2>&1 | tee build.log || exit 1
 
       - name: Query Greptile On Failure
         if: failure()
