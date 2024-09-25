@@ -36,14 +36,18 @@ jobs:
       - name: Query Greptile On Failure
         if: failure()
         run: |
-          LOG_CONTENT=$(cat build.log)
-          curl -X POST https://your-webhook-url.com/endpoint \
-          -H "Content-Type: application/json" \
-          -d '{
-            "log": "'"$LOG_CONTENT"'",
-            "status": "failure",
-            "repo": "'"${{ github.repository }}"'",
-            "greptileKey": "'"${{ secrets.GREPTILE_KEY }}"'",
-            "githubToken": "'"${{ secrets.GH_TOKEN }}"'"
-          }'
-      
+          # Check if the log file exists before reading
+          if [[ -f build.log ]]; then
+            LOG_CONTENT=$(< build.log)  # Using a more efficient way to read the file
+            curl -X POST https://your-webhook-url.com/endpoint \
+              -H "Content-Type: application/json" \
+              -d '{
+                "log": "'"${LOG_CONTENT//\'/\'\\\'\'}"'",
+                "status": "failure",
+                "repo": "'"${{ github.repository }}"'",
+                "greptileKey": "'"${{ secrets.GREPTILE_KEY }}"'",
+                "githubToken": "'"${{ secrets.GH_TOKEN }}"'"
+              }'
+          else
+            echo "Log file not found."
+          fi
