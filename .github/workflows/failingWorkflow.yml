@@ -33,9 +33,17 @@ jobs:
       - name: Run ESLint
         run: npx eslint .
 
-      - name: Notify on failure
+      - name: Query Greptile On Failure
         if: failure()
         run: |
-            curl -X POST https://your-webhook-url.com/endpoint \
-            -H "Content-Type: application/json" \
-            -d '{"text": "Build failed!"}'
+          LOG_CONTENT=$(cat build.log)
+          curl -X POST https://your-webhook-url.com/endpoint \
+          -H "Content-Type: application/json" \
+          -d '{
+            "log": "'"$LOG_CONTENT"'",
+            "status": "failure",
+            "repo": "'"${{ github.repository }}"'",
+            "greptileKey": "'"${{ secrets.GREPTILE_KEY }}"'",
+            "githubToken": "'"${{ secrets.GH_TOKEN }}"'"
+          }'
+      
