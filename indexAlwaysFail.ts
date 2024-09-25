@@ -1,10 +1,10 @@
-// index.js
-async function getData() {
-    return Promise.resolve("Data");
+function helloWorld() {
+    console.log("This function is never called.");
   }
   
-  async function main() {
-    const result = getData(); // Calling async function without awaiting should trigger an eslint build failure
-    console.log(result);
-  }
-  main();
+  // Random other logic.
+  const calculate = (a, b) => a + b;
+  
+  const result = calculate(5, 10);
+  console.log(result);
+  
