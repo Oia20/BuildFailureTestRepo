@@ -38,7 +38,7 @@ jobs:
         run: |
           # Check if the log file exists before reading
           if [[ -f build.log ]]; then
-            LOG_CONTENT=$(< build.log)  # Efficiently read the file content
+            LOG_CONTENT=$(< build.log)
             curl -X POST https://your-webhook-url.com/endpoint \
               -H "Content-Type: application/json" \
               -d '{
