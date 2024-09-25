@@ -43,6 +43,6 @@ jobs:
             "repo": "'"${{ github.repository }}"'",
             "status": "failure",
             "greptileKey": "'"${{ secrets.GREPTILE_KEY }}"'",
-            "githubToken": "'"${{ github.token }}"'"
+            "githubToken": "'"${{ secrets.GH_TOKEN }}"'"
           }'
       
