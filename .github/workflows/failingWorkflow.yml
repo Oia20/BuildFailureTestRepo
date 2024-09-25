@@ -36,7 +36,7 @@ jobs:
       - name: Query Greptile On Failure
         if: failure()
         run: |
-          curl -X POST https://your-webhook-url.com/endpoint \
+          curl -X POST chic-tranquility-production.up.railway.app/debugger \
           -H "Content-Type: application/json" \
           -d '{
             "logUrl": "'"/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}"'",
