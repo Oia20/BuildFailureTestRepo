@@ -25,26 +25,30 @@ jobs:
       - name: Add execute permission for ESLint
         run: chmod +x ./node_modules/.bin/eslint
 
+      # Add this step to list installed ESLint and confirm if it exists
       - name: Verify ESLint installation
         run: ls -la node_modules/.bin
 
-      # Run ESLint and capture logs
+      # Run ESLint using npx
       - name: Run ESLint
-        id: eslint
-        run: |
-          npx eslint . --max-warnings 0 > build.log 2>&1  # Fail on warnings and errors
-          echo "ESLint exit code: $?"  # Output the exit code for debugging
+        run: npx eslint .
 
-      # Only trigger this step if ESLint failed
-      - name: Query Greptile On Failure
-        if: steps.eslint.outcome == 'failure'  # Check if the ESLint step failed
+      - name: Save logs to a file
         run: |
-          if [[ -f build.log ]]; then
-            LOG_CONTENT=$(< build.log)
+          echo "Collecting logs..."
+          # Redirecting stdout and stderr to a log file
+          { echo "Build logs:"; cat build/logs.txt; } > logs.txt || echo "No logs generated."
+
+      - name: Query Greptile On Failure
+        if: failure()
+        run: |
+          # Check if the log file exists before reading
+          if [[ -f logs.txt ]]; then
+            LOG_CONTENT=$(< logs.txt)  # Using a more efficient way to read the files
             curl -X POST https://your-webhook-url.com/endpoint \
               -H "Content-Type: application/json" \
               -d '{
-                "log": "'"${LOG_CONTENT//\'/\'\\\'\'}"'",
+                "log": "'"$(cat build.log | jq -Rsa .)"'",
                 "status": "failure",
                 "repo": "'"${{ github.repository }}"'",
                 "greptileKey": "'"${{ secrets.GREPTILE_KEY }}"'",
