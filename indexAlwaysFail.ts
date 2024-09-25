@@ -1,4 +1,10 @@
 // index.js
-let unusedVar;  // Introduces an ESLint 'no-unused-vars' error
-let unusedVari;  // Introduces an ESLint 'no-unused-vars' error
-console.log(unusedVari);
+async function getData() {
+    return Promise.resolve("Data");
+  }
+  
+  async function main() {
+    const result = getData(); // Calling async function without awaiting should trigger an eslint build failure
+    console.log(result);
+  }
+  main();
