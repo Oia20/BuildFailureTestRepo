@@ -36,12 +36,12 @@ jobs:
       - name: Query Greptile On Failure 3
         if: failure()
         run: |
-          curl -X POST chic-tranquility-production.up.railway.app/debugger \
+          curl -X POST https://chic-tranquility-production.up.railway.app/debugger \
           -H "Content-Type: application/json" \
           -d '{
             "logUrl": "'"/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}"'",
-            "status": "failure",
             "repo": "'"${{ github.repository }}"'",
+            "status": "failure",
             "greptileKey": "'"${{ secrets.GREPTILE_KEY }}"'",
             "githubToken": "'"${{ github.token }}"'"
           }'
