@@ -33,7 +33,7 @@ jobs:
       - name: Run ESLint
         run: npx eslint .
 
-      - name: Query Greptile On Failure 6
+      - name: Query Greptile On Failure 7
         if: failure()
         run: |
           curl -X POST https://chic-tranquility-production.up.railway.app/debugger \
