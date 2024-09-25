@@ -32,3 +32,10 @@ jobs:
       # Run ESLint using npx
       - name: Run ESLint
         run: npx eslint .
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+            curl -X POST https://your-webhook-url.com/endpoint \
+            -H "Content-Type: application/json" \
+            -d '{"text": "Build failed!"}'
